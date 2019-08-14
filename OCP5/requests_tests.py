@@ -25,14 +25,18 @@ def main():
     while category_number < 50:
         if ":" not in data_categories[category_number] and "-" not in data_categories[category_number]:
             categories.append(data_categories[category_number])
-        # self.cursor = self.db.cursor()
-        # add_category = ("INSERT INTO Category" "(category)" "VALUES('{}')".format(data_categories[category_number]))
-        # self.cursor.execute(add_category)
-        # self.db.commit()
-        # self.cursor.close()
-        category_number += 1
+            # self.cursor = self.db.cursor()
+            # add_category = ("INSERT INTO Category" "(category)" "VALUES('{}')".format(data_categories[category_number]))
+            # self.cursor.execute(add_category)
+            # self.db.commit()
+            # self.cursor.close()
+            category_number += 1
 
-    print(categories)
+    # get products from OFF
+    for category in categories:
+        request_products = requests.get('https://fr.openfoodfacts.org/categories&json=1' + category####name)
+        products_json = request_products.json()
+        # print(products_json)
 
 
 if __name__ == "__main__":
