@@ -22,22 +22,14 @@ The program checks the user's choice. If correct:
 
 >**- 1:**     
 >>the program asks the user to choose among a list of categories.
-
 >>the user enters the number chosen.
-
 >>the program checks the user's choice. 
-
 >>If correct, the program asks the user to choose among a list of products.
-
 >>the user enters the number chosen.
-
 >>the program checks the user's choice.
-
 >>If correct, the program searches in the database a product with the most similar categories and a better nutriscore.
-
 >>the program displays the substitute with it's related data 
 >>(name, brand, nutriscore, description, store where to buy it, link to OFF's page, nutriscore)
-
 >>the user can save the result in the database (enter "s" or "S")
     
 >**- 2:**   

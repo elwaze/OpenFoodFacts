@@ -13,6 +13,7 @@ class Product:
 
     def __init__(
             self,
+            link=None,
             name=None,
             brand=None,
             nutriscore=None,
@@ -20,6 +21,7 @@ class Product:
             stores=None,
             users=None
     ):
+        self.link = link
         self.name = name
         self.brand = brand
         self.nutriscore = nutriscore

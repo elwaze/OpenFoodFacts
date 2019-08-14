@@ -24,11 +24,20 @@ class ProductRepository(BaseRepository):
     def get_all_by_score_upper(self, score):
         pass
 
-    def write_in_db(self):
+    def write_in_db(self, link=None, name=None, brand=None, nutriscore=None, description=None):
+        # requete sql de type insert
         pass
 
 
 class CategoryRepository(BaseRepository):
+    def write_in_db(self, name=None):
+        # self.cursor = self.db.cursor()
+        # add_category = ("INSERT INTO Category" "(category)" "VALUES('{}')".format(data_categories[category_number]))
+        # self.cursor.execute(add_category)
+        # self.db.commit()
+        # self.cursor.close()
+        pass
+
     pass
 
 
