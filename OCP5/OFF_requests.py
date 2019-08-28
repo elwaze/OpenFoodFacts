@@ -22,3 +22,9 @@ class Off_Requests():
             # self.db.commit()
             # self.cursor.close()
             category_number += 1
+
+            #         # self.cursor = self.db.cursor()
+            #         # add_category = ("INSERT INTO Category" "(category)" "VALUES('{}')".format(data_categories[category_tested]))
+            #         # self.cursor.execute(add_category)
+            #         # self.db.commit()
+            #         # self.cursor.close()

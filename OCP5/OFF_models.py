@@ -15,7 +15,6 @@ class Product:
             self,
             link=None,
             name=None,
-            brand=None,
             nutriscore=None,
             categories=None,
             stores=None,
@@ -23,11 +22,17 @@ class Product:
     ):
         self.link = link
         self.name = name
-        self.brand = brand
         self.nutriscore = nutriscore
         self.categories = categories    # collection / liste (si ordonné)
         self.stores = stores    # collection / liste (si ordonné)
         self.users = users  # collection / liste (si ordonné)
+
+    @property
+    def insert_sql_query(self):
+        return 'INSERT OR IGNORE Product Values(name'
+
+    def insert_into_db(self):
+        self.objects.insert_by_model(self)
 
 
 class Category:
@@ -36,11 +41,9 @@ class Category:
     def __init__(
             self,
             name=None,
-            average_nutriscore=None,
             products=None
     ):
         self.name = name
-        self.average_nutriscore = average_nutriscore
         self.products = products    # collection / liste (si ordonné)
 
 
@@ -71,3 +74,10 @@ class User:
 
 if __name__ == "__main__":
     pass
+    # ex pr recup tous les prod de la bdd :
+    # products = Product.objects.get_products()
+    # pr recup prod d'1 cat :
+    # catprod = Product.objects.get_products_by_category(category_name)
+# enreg unn nouveau prod :
+#new_prod_categories = Categorie.object.get_by_name(category_name) ?
+# new_product = Product.object.insert(link, name, nutriscore, stores, new_prod_categories)
