@@ -16,26 +16,26 @@ class Product:
             link=None,
             name=None,
             nutriscore=None,
-            categories=None,
+            other_categories=None,
+            category=None,
             stores=None,
             users=None
     ):
         self.link = link
         self.name = name
         self.nutriscore = nutriscore
-        self.categories = categories    # collection / liste (si ordonné)
+        self.category = category
         self.stores = stores    # collection / liste (si ordonné)
         self.users = users  # collection / liste (si ordonné)
 
     @property
-    def insert_sql_query_prod(self):
-        return 'INSERT INTO product (link, name, nutriscore) VALUES ({}, {}, {});'.format(
-            self.link, self.name, self.nutriscore)
+    def insert_sql_query_product(self):
+        return 'INSERT INTO product (link, name, nutriscore, category_name) VALUES ({}, {}, {}, {});'.format(
+            self.link, self.name, self.nutriscore, self.category)
 
     @property
-    def insert_sql_query_category_relation(self):
-        return 'INSERT INTO categories_products_relation (category_name, product_link) VALUES({},{});'.format(
-            category, self.link)
+    def select_sql_query_product(self):
+        return 'SELECT * FROM product WHERE category_name = {}'.format(self.category)
 
     def insert_into_db(self):
         self.objects.insert_by_model(self)
@@ -54,7 +54,7 @@ class Category:
 
     @property
     def insert_sql_query(self):
-        return "INSERT INTO category (name) VALUES ({})".format(self.name)
+        return 'INSERT INTO category (name) VALUES ({})'.format(self.name)
 
     def insert_into_db(self):
         self.objects.insert_by_model(self)

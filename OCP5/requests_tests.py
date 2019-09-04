@@ -68,18 +68,23 @@ from OFF_models import Product, Category, Store, User
 #     print(pnb)
 
 
-def sort_and_register_products(products):
+def sort_and_register_products(products, category):
     for i in (range(0, len(products) - 1)):
         for product in products[i]:
             url = product.get('url')
             name = product.get('product_name_fr')
             nutriscore = product.get('nutrition_grades')
-            categ = product.get('categories')
             stores = product.get('stores')
             country = product.get('countries')
-            if all([url, name, nutriscore, categ, stores, country.lower().strip() == "france"]):
+            if all([url, name, nutriscore, stores, country.lower().strip() == "france"]):
                 # insert directement dans la bdd à revoir +++
-                options = {"name": name, "link": url, "nutriscore": nutriscore, "categories": categ, "stores": stores}
+                options = {
+                    "name": name,
+                    "link": url,
+                    "nutriscore": nutriscore,
+                    "category": category,
+                    "stores": stores
+                }
                 product = Product(**options)
                 product.insert_into_db()
 
@@ -97,7 +102,7 @@ def get_products(category):
         products_json = request_products.json()
         products.append(products_json.get('products'))
         pages_count += 1
-        sort_and_register_products(products)
+        sort_and_register_products(products, category)
 
 
 def get_categories(data_tags):
