@@ -29,32 +29,34 @@ class ProductRepository(BaseRepository):
     def get_products_by_score_lower(self, score):
         pass
 
-    def insert(self, link=None, name=None, nutriscore=None, categories=None):
-        # requete sql de type insert:
-        rows = self.db.query("""
-            INSERT
-        """)
-        pass
+    # def insert(self, link=None, name=None, nutriscore=None, categories=None):
+    #     # requete sql de type insert:
+    #     rows = self.db.query("""
+    #         INSERT INTO
+    #     """)
+    #     pass
 
     def insert_by_model(self, product):
         """
-
         :param product:
         :type product: OFF_models.Product
         :return:
         """
         # requete sql de type insert:
-        rows = self.db.query(product.insert_sql_query)
-        pass
+        rows = self.db.query(product.insert_sql_query_prod)
+        for category in product.categories:
+            rows = self.db.query(category.insert_sql_query_category_relation)
+
 
 class CategoryRepository(BaseRepository):
-    def write_in_db(self, name=None, products=None, ):
-        # self.cursor = self.db.cursor()
-        # add_category = ("INSERT INTO Category" "(category)" "VALUES('{}')".format(data_categories[category_number]))
-        # self.cursor.execute(add_category)
-        # self.db.commit()
-        # self.cursor.close()
-        pass
+    def insert_by_model(self, category):
+        """
+        :param category:
+        :type category: OFF_models.Category
+        :return:
+        """
+        # requete sql de type insert:
+        rows = self.db.query(category.insert_sql_query)
 
 
 class StoreRepository(BaseRepository):

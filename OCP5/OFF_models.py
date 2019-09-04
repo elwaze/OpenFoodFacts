@@ -28,8 +28,14 @@ class Product:
         self.users = users  # collection / liste (si ordonné)
 
     @property
-    def insert_sql_query(self):
-        return 'INSERT OR IGNORE Product Values(name'
+    def insert_sql_query_prod(self):
+        return 'INSERT INTO product (link, name, nutriscore) VALUES ({}, {}, {});'.format(
+            self.link, self.name, self.nutriscore)
+
+    @property
+    def insert_sql_query_category_relation(self):
+        return 'INSERT INTO categories_products_relation (category_name, product_link) VALUES({},{});'.format(
+            category, self.link)
 
     def insert_into_db(self):
         self.objects.insert_by_model(self)
@@ -45,6 +51,13 @@ class Category:
     ):
         self.name = name
         self.products = products    # collection / liste (si ordonné)
+
+    @property
+    def insert_sql_query(self):
+        return "INSERT INTO category (name) VALUES ({})".format(self.name)
+
+    def insert_into_db(self):
+        self.objects.insert_by_model(self)
 
 
 class Store:
