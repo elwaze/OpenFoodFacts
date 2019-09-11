@@ -33,13 +33,15 @@ class Product:
             self.link, self.name, self.nutriscore, self.category)
 
     @property
-    def insert_sql_query_stores(self):
-        return 'INSERT IGNORE INTO store (name) VALUES ("{}");'.format(self.stores)
+    def insert_sql_query_store(self):
+        return 'INSERT IGNORE INTO store (name) VALUES ("{}");'.format(store)
 
     @property
     def insert_sql_query_prod_store_relation(self):
-        return 'INSERT INTO products_stores_relation (product_link, store_idstore) VALUES ("{}", "{}");'.format(
-            self.link, ##idstore???##)
+        return [
+            'INSERT INTO products_stores_relation (product_link, store_idstore) VALUES ("{}", "{}");'.format(
+            self.link, store['name']) for store in self.stores
+        ]
 
     def insert_into_db(self):
         self.objects.insert_by_model(self)
@@ -57,15 +59,18 @@ class Category:
 
     @property
     def insert_sql_query(self):
-        return 'INSERT INTO category (name) VALUES ("{}")'.format(self.name)
+        return 'INSERT IGNORE INTO category (name) VALUES ("{}")'.format(self.name)
 
     @property
     def select_sql_query_prod(self):
-        return 'SELECT * FROM product WHERE category_name = "{}";'.format(self.name)
+        return 'SELECT name FROM product WHERE category_name = "{}";'.format(self.name)
 
     def insert_into_db(self):
         self.objects.insert_by_model(self)
         print('Category {} inserted'.format(self.__dict__))
+
+    def get_from_db(self):
+        self.objects.get_categories()
 
 
 class Store:

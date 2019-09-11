@@ -74,7 +74,8 @@ def sort_and_register_products(products, category):
             url = product.get('url')
             name = product.get('product_name_fr')
             nutriscore = product.get('nutrition_grades')
-            stores = product.get('stores')
+            stores = product.get('stores').split()
+            print(stores)
             country = product.get('countries')
             if all([url, name, nutriscore, stores, country.lower().strip() == "france"]):
                 # insert product in database
@@ -83,7 +84,7 @@ def sort_and_register_products(products, category):
                     "link": url,
                     "nutriscore": nutriscore,
                     "category": category,
-                    "stores": stores
+                    "stores": [stores]
                 }
                 product = Product(**options)
                 product.insert_into_db()
@@ -120,7 +121,7 @@ def get_categories(data_tags):
         category = data_categories[category_tested]
         if ":" not in category[0] and "-" not in category[0]:
             category_selected += 1
-            options = {"name": category[0], "products": category[2]}
+            options = {"name": category[0]}
             category_registered = Category(**options)
             category_registered.insert_into_db()
             # get products for this category
@@ -128,7 +129,7 @@ def get_categories(data_tags):
         category_tested += 1
 
 
-def main():
+def off_requestor():
     # get categories from the OpenFoodFacts' API
     request_categories = requests.get('https://fr.openfoodfacts.org/categories&json=1')
     categories_json = request_categories.json()
@@ -138,4 +139,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    off_requestor()

@@ -30,8 +30,10 @@ class ProductRepository(BaseRepository):
         """
         # requete sql de type insert:
         rows = self.db.query(product.insert_sql_query_product)
-        rows = self.db.query(product.insert_sql_query_store)
-        rows = self.db.query(product.insert_sql_query_prod_store_relation)
+        for store in product.stores:
+            rows = self.db.query(product.insert_sql_query_store(store))
+            rows = self.db.query(product.insert_sql_query_prod_store_relation)
+        rows = self.db.query(product.insert_sql_query_categories_products_relation)
 
 
 class CategoryRepository(BaseRepository):
@@ -52,8 +54,8 @@ class CategoryRepository(BaseRepository):
         categories = self.db.query('SELECT name FROM category;')
         return categories
 
-    def get_products_by_category(self):
-        category_products = self.db.query(self.select_sql_query_prod)
+    def get_products_by_category(self, category):
+        category_products = self.db.query(category.select_sql_query_prod)
         return category_products
 
 
