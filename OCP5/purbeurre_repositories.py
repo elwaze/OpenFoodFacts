@@ -14,32 +14,31 @@ class BaseRepository:
 
 class ProductRepository(BaseRepository):
 
-    def get_products_by_score_lower(self, score):
-        bad_products = self.db.query(score.select_sql_query_prod)
-        pass
+    def get_products_by_user(self, user):
+        user_products = self.db.query(user.select_sql_query_prod)
+        return user_products
 
-    def get_products_by_category(self, category):
-        category_products = self.db.query(category.select_sql_query_prod)
-        pass
-
-    def get_products_by_score_upper(self, score):
-        pass
+    def get_better_product(self, score):
+        better_product = self.db.query(score.select_sql_query_prod)
+        return better_product
 
     def insert_by_model(self, product):
         """
         :param product:
-        :type product: OFF_models.Product
+        :type product: purbeurre_models.Product
         :return:
         """
         # requete sql de type insert:
         rows = self.db.query(product.insert_sql_query_product)
+        rows = self.db.query(product.insert_sql_query_store)
+        rows = self.db.query(product.insert_sql_query_prod_store_relation)
 
 
 class CategoryRepository(BaseRepository):
     def insert_by_model(self, category):
         """
         :param category:
-        :type category: OFF_models.Category
+        :type category: purbeurre_models.Category
         :return:
         """
         # requete sql de type insert:
@@ -47,11 +46,24 @@ class CategoryRepository(BaseRepository):
 
     def get_category_by_product(self, product):
         category = self.db.query(product.select_sql_query_cat)
+        return category
+
+    def get_categories(self):
+        categories = self.db.query('SELECT name FROM category;')
+        return categories
+
+    def get_products_by_category(self):
+        category_products = self.db.query(self.select_sql_query_prod)
+        return category_products
 
 
 class StoreRepository(BaseRepository):
-    pass
+
+    def get_store_by_product(self, product):
+        stores = self.db.query(product.select_sql_query_stores)
+        return stores
 
 
 class UserRepository(BaseRepository):
-    pass
+    def insert_by_model(self, user):
+        rows = self.db.query(user.insert_sql_query)

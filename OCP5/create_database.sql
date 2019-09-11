@@ -15,22 +15,29 @@ CREATE SCHEMA IF NOT EXISTS `OFF` DEFAULT CHARACTER SET utf8 ;
 USE `OFF` ;
 
 -- -----------------------------------------------------
+-- Table `OFF`.`category`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `OFF`.`category` (
+  `name` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`name`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `OFF`.`product`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `OFF`.`product` (
   `link` VARCHAR(150) NOT NULL,
   `name` VARCHAR(45) NOT NULL,
-  `nutriscore` INT NOT NULL,
-  PRIMARY KEY (`link`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `OFF`.`category`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `OFF`.`category` (
-  `name` INT NOT NULL,
-  PRIMARY KEY (`name`))
+  `nutriscore` VARCHAR(1) NOT NULL,
+  `category_name` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`link`, `category_name`),
+  INDEX `fk_product_category1_idx` (`category_name` ASC) VISIBLE,
+  CONSTRAINT `fk_product_category1`
+    FOREIGN KEY (`category_name`)
+    REFERENCES `OFF`.`category` (`name`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
@@ -50,28 +57,6 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `OFF`.`user` (
   `email_adress` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`email_adress`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `OFF`.`categories_products_relation`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `OFF`.`categories_products_relation` (
-  `category_name` INT NOT NULL,
-  `product_link` VARCHAR(150) NOT NULL,
-  PRIMARY KEY (`category_name`, `product_link`),
-  INDEX `fk_category_has_product_product1_idx` (`product_link` ASC) VISIBLE,
-  INDEX `fk_category_has_product_category_idx` (`category_name` ASC) VISIBLE,
-  CONSTRAINT `fk_category_has_product_category`
-    FOREIGN KEY (`category_name`)
-    REFERENCES `OFF`.`category` (`name`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_category_has_product_product1`
-    FOREIGN KEY (`product_link`)
-    REFERENCES `OFF`.`product` (`link`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
@@ -103,7 +88,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `OFF`.`products_users_relation` (
   `good_product_link` VARCHAR(150) NOT NULL,
   `user_email_adress` VARCHAR(45) NOT NULL,
-  `bad_product_link` VARCHAR(145) NOT NULL,
+  `bad_product_link` VARCHAR(150) NOT NULL,
   PRIMARY KEY (`good_product_link`, `user_email_adress`, `bad_product_link`),
   INDEX `fk_product_has_user_user1_idx` (`user_email_adress` ASC) VISIBLE,
   INDEX `fk_product_has_user_product1_idx` (`good_product_link` ASC) VISIBLE,

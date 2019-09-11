@@ -3,7 +3,7 @@
 
 import requests
 
-from OFF_models import Product, Category, Store, User
+from purbeurre_models import Product, Category, Store, User
 #
 # def main():
 #
@@ -77,7 +77,7 @@ def sort_and_register_products(products, category):
             stores = product.get('stores')
             country = product.get('countries')
             if all([url, name, nutriscore, stores, country.lower().strip() == "france"]):
-                # insert directement dans la bdd à revoir +++
+                # insert product in database
                 options = {
                     "name": name,
                     "link": url,

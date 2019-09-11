@@ -1,10 +1,10 @@
 #! /usr/bin env python3
 # coding: utf-8
 
-from OFF_repositories import ProductRepository
-from OFF_repositories import CategoryRepository
-from OFF_repositories import StoreRepository
-from OFF_repositories import UserRepository
+from purbeurre_repositories import ProductRepository
+from purbeurre_repositories import CategoryRepository
+from purbeurre_repositories import StoreRepository
+from purbeurre_repositories import UserRepository
 from database import db
 
 
@@ -16,7 +16,6 @@ class Product:
             link=None,
             name=None,
             nutriscore=None,
-            other_categories=None,
             category=None,
             stores=None,
             users=None
@@ -30,15 +29,21 @@ class Product:
 
     @property
     def insert_sql_query_product(self):
-        return 'INSERT INTO product (link, name, nutriscore, category_name) VALUES ({}, {}, {}, {});'.format(
+        return 'INSERT IGNORE INTO product (link, name, nutriscore, category_name) VALUES ("{}", "{}", "{}", "{}");'.format(
             self.link, self.name, self.nutriscore, self.category)
 
     @property
-    def select_sql_query_product(self):
-        return 'SELECT * FROM product WHERE category_name = {}'.format(self.category)
+    def insert_sql_query_stores(self):
+        return 'INSERT IGNORE INTO store (name) VALUES ("{}");'.format(self.stores)
+
+    @property
+    def insert_sql_query_prod_store_relation(self):
+        return 'INSERT INTO products_stores_relation (product_link, store_idstore) VALUES ("{}", "{}");'.format(
+            self.link, ##idstore???##)
 
     def insert_into_db(self):
         self.objects.insert_by_model(self)
+        print('Product {} inserted'.format(self.__dict__))
 
 
 class Category:
@@ -46,18 +51,21 @@ class Category:
 
     def __init__(
             self,
-            name=None,
-            products=None
+            name=None
     ):
         self.name = name
-        self.products = products    # collection / liste (si ordonné)
 
     @property
     def insert_sql_query(self):
-        return 'INSERT INTO category (name) VALUES ({})'.format(self.name)
+        return 'INSERT INTO category (name) VALUES ("{}")'.format(self.name)
+
+    @property
+    def select_sql_query_prod(self):
+        return 'SELECT * FROM product WHERE category_name = "{}";'.format(self.name)
 
     def insert_into_db(self):
         self.objects.insert_by_model(self)
+        print('Category {} inserted'.format(self.__dict__))
 
 
 class Store:
@@ -83,6 +91,14 @@ class User:
     ):
         self.name = name
         self.products = products
+
+    @property
+    def insert_sql_query(self):
+        return 'INSERT IGNORE INTO user (name) VALUES ("{}");'.format(self.name)
+
+    def insert_into_db(self):
+        self.objects.insert_by_model(self)
+
 
 
 if __name__ == "__main__":
