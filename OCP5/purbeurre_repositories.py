@@ -14,13 +14,20 @@ class BaseRepository:
 
 class ProductRepository(BaseRepository):
 
-    def get_products_by_user(self, user):
-        user_products = self.db.query(user.select_sql_query_prod)
-        return user_products
+    def get_better_products_by_category(self, category):
+        better_products = self.db.query(category.select_sql_query_better_products)
+        return better_products
 
-    def get_better_product(self, score):
-        better_product = self.db.query(score.select_sql_query_prod)
-        return better_product
+    def get_products_by_category(self, category):
+        products = self.db.query(category.select_sql_query_products)
+        return products
+
+    def get_products_by_user(self, user):
+        products = self.db.query(user.select_sql_query_prod)
+        return products
+
+    def get_product_name(self, product):
+        product_name = self.db.query(product.select_sql_query_name)
 
     def insert_by_model(self, product):
         """
@@ -32,11 +39,11 @@ class ProductRepository(BaseRepository):
         rows = self.db.query(product.insert_sql_query_product)
         for store in product.stores:
             rows = self.db.query(product.insert_sql_query_store(store))
-            rows = self.db.query(product.insert_sql_query_prod_store_relation)
-        rows = self.db.query(product.insert_sql_query_categories_products_relation)
+            rows = self.db.query(product.insert_sql_query_prod_store_relation(store))
 
 
 class CategoryRepository(BaseRepository):
+
     def insert_by_model(self, category):
         """
         :param category:
@@ -61,11 +68,22 @@ class CategoryRepository(BaseRepository):
 
 class StoreRepository(BaseRepository):
 
-    def get_store_by_product(self, product):
+    def get_stores_by_product(self, product):
         stores = self.db.query(product.select_sql_query_stores)
         return stores
 
 
 class UserRepository(BaseRepository):
+
     def insert_by_model(self, user):
         rows = self.db.query(user.insert_sql_query)
+
+    def insert_favorite(self, user, bad_product, good_product):
+        rows = self.db.query(user.insert_sql_query_prod_user_relation(bad_product, good_product))
+
+    def get_favorites_by_user(self, user):
+        favorites = self.db.query(user.select_sql_query_favorites)
+
+    def get_products_by_user(self, user):
+        user_products = self.db.query(user.select_sql_query_prod)
+        return user_products

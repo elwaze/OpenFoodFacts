@@ -32,20 +32,25 @@ class Product:
         return 'INSERT IGNORE INTO product (link, name, nutriscore, category_name) VALUES ("{}", "{}", "{}", "{}");'.format(
             self.link, self.name, self.nutriscore, self.category)
 
-    @property
-    def insert_sql_query_store(self):
+    def insert_sql_query_store(self, store):
         return 'INSERT IGNORE INTO store (name) VALUES ("{}");'.format(store)
 
-    @property
-    def insert_sql_query_prod_store_relation(self):
-        return [
-            'INSERT INTO products_stores_relation (product_link, store_idstore) VALUES ("{}", "{}");'.format(
-            self.link, store['name']) for store in self.stores
-        ]
+    def insert_sql_query_prod_store_relation(self, store):
+        return 'INSERT IGNORE INTO product_store_relation (product_link, store_name) VALUES ("{}", "{}");'.format(self.link, store)
 
     def insert_into_db(self):
         self.objects.insert_by_model(self)
-        print('Product {} inserted'.format(self.__dict__))
+
+    @property
+    def select_sql_query_name(self):
+        return 'SELECT name FROM product WHERE link = "{}";'.format(self.link)
+
+    @property
+    def select_sql_query_stores(self):
+        return 'SELECT store_name FROM product_store_relation WHERE product_link = "{}";'.format(self.link)
+
+
+
 
 
 class Category:
@@ -62,12 +67,15 @@ class Category:
         return 'INSERT IGNORE INTO category (name) VALUES ("{}")'.format(self.name)
 
     @property
-    def select_sql_query_prod(self):
-        return 'SELECT name FROM product WHERE category_name = "{}";'.format(self.name)
+    def select_sql_query_products(self):
+        return 'SELECT name, link, nutriscore FROM product WHERE category_name = "{}";'.format(self.name)
+
+    @property
+    def select_sql_query_better_products(self):
+        return 'SELECT * FROM product WHERE category_name = "{}" ORDER BY nutriscore ASC;'.format(self.name)
 
     def insert_into_db(self):
         self.objects.insert_by_model(self)
-        print('Category {} inserted'.format(self.__dict__))
 
     def get_from_db(self):
         self.objects.get_categories()
@@ -82,8 +90,7 @@ class Store:
             products=None
     ):
         self.name = name
-        self.products = products    # collection / liste (si ordonné)
-        self.idstore = None
+        self.products = products
 
 
 class User:
@@ -91,19 +98,28 @@ class User:
 
     def __init__(
             self,
-            name=None,
+            email_adress=None,
             products=None
     ):
-        self.name = name
+        self.email_adress = email_adress
         self.products = products
 
     @property
     def insert_sql_query(self):
-        return 'INSERT IGNORE INTO user (name) VALUES ("{}");'.format(self.name)
+        return 'INSERT IGNORE INTO user (email_adress) VALUES ("{}");'.format(self.email_adress)
 
     def insert_into_db(self):
         self.objects.insert_by_model(self)
 
+    @property
+    def insert_sql_query_prod_user_relation(self, good_product, bad_product):
+        return 'INSERT IGNORE INTO products_user_relation ' \
+               '(good_product_link, bad_product_link, user_email_adress) VALUES("{}", "{}", "{}");'.format(
+                good_product, bad_product, self.email_adress)
+
+    @property
+    def select_sql_query_prod(self):
+        return 'SELECT bad_product_link FROM products_users_relation WHERE user_email_adress = "{}";'.format(self.email_adress)
 
 
 if __name__ == "__main__":
