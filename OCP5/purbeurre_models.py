@@ -49,8 +49,9 @@ class Product:
     def select_sql_query_stores(self):
         return 'SELECT store_name FROM product_store_relation WHERE product_link = "{}";'.format(self.link)
 
-
-
+    @property
+    def select_sql_query_substitute(self):
+        return 'SELECT good_product_link FROM products_users_relation WHERE bad_product_link = "{}";'.format(self.link)
 
 
 class Category:
@@ -111,11 +112,9 @@ class User:
     def insert_into_db(self):
         self.objects.insert_by_model(self)
 
-    @property
     def insert_sql_query_prod_user_relation(self, good_product, bad_product):
-        return 'INSERT IGNORE INTO products_user_relation ' \
-               '(good_product_link, bad_product_link, user_email_adress) VALUES("{}", "{}", "{}");'.format(
-                good_product, bad_product, self.email_adress)
+        return 'INSERT IGNORE INTO products_users_relation (good_product_link, bad_product_link, user_email_adress) VALUES("{}", "{}", "{}");'.format(
+                good_product.link, bad_product.link, self.email_adress)
 
     @property
     def select_sql_query_prod(self):

@@ -28,6 +28,11 @@ class ProductRepository(BaseRepository):
 
     def get_product_name(self, product):
         product_name = self.db.query(product.select_sql_query_name)
+        return product_name
+
+    def get_substitute(self, product):
+        substitute = self.db.query(product.select_sql_query_substitute)
+        return substitute
 
     def insert_by_model(self, product):
         """
@@ -70,7 +75,10 @@ class StoreRepository(BaseRepository):
 
     def get_stores_by_product(self, product):
         stores = self.db.query(product.select_sql_query_stores)
-        return stores
+        stores_list = []
+        for store in stores:
+            stores_list.append(store["store_name"])
+        return stores_list
 
 
 class UserRepository(BaseRepository):
